@@ -24,14 +24,15 @@ class TwitterUserActor(userName: String) extends Actor with ActorLogging {
   def getUserTopHashtags(sender: ActorRef, symbol: String) = {
     val client = TwitterRestClient()
 
-//    val userName = "realdonaldtrump"
+    client.user(screen_name = userName).map{ userData =>
+      println(s"$userName's profile_image_url: " + userData.data.profile_image_url)
+      println(s"$userName's profile_background_image_url: " + userData.data.profile_background_image_url)
+      println(s"$userName's profile_banner_url: " + userData.data.profile_banner_url)
+    }
 
     val result = client.userTimelineForUser(screen_name = userName, count = 200).map { ratedData =>
-      val tweets = ratedData.data // Wszystkie tweety
+      val tweets = ratedData.data
       val topHashtags: Seq[(String, Int)] = getTopHashtags(tweets)
-//      val rankings = topHashtags.map { case ((entity, frequency), idx) => s"[${idx + 1}] $entity (found $frequency times)" }
-//      println(s"${userName.toUpperCase}'S TOP HASHTAGS:")
-//      println(rankings.mkString("\n"))
 //      sender ! StockHistoryT(userName, topHashtags)
       watchers.foreach(_ ! StockHistoryT(userName, topHashtags))
       println("After sender ! StockHistoryT(userName, topHashtags)")
@@ -40,7 +41,7 @@ class TwitterUserActor(userName: String) extends Actor with ActorLogging {
 
   protected[this] var watchers: HashSet[ActorRef] = HashSet.empty[ActorRef]
 
-  private val fetchLatestInterval = 6000.millis
+  private val fetchLatestInterval = 120000.millis
   // Fetch the latest stock value every 75ms
   val stockTick = {
     // scheduler should use the system dispatcher

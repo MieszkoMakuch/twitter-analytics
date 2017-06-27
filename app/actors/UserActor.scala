@@ -39,7 +39,6 @@ class UserActor @Inject()(@Assisted out: ActorRef,
 
     case StockHistory(symbol, history) =>
       val numberSeq = history.map(h => Json.toJson[Double](h))
-      Console.println(s"val numberSeq = history.map: $numberSeq")
       val stockUpdateMessage = Json.obj("type" -> "stockhistory", "symbol" -> symbol, "history" -> numberSeq)
       out ! stockUpdateMessage
 

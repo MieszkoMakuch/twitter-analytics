@@ -32,7 +32,8 @@ class HomeController @Inject()(@Named("stocksActor") stocksActor: ActorRef,
 
   // Home page that renders template
   def index = Action { implicit request =>
-    Ok(views.html.index())
+    Ok(views.html.userprofile())
+//    Ok(views.html.index())
   }
 
   /**

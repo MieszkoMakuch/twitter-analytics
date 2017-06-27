@@ -24,10 +24,12 @@ $ ->
     $("#addsymboltext").val("")
 
   $("#twitter-user-form").submit (event) ->
+    console.log("$(#twitter-user-form).submit (event) ->")
     event.preventDefault()
     # send the message to watch the stock
     ws.send(JSON.stringify({type: "twitterUser", userName: $("#twitter-user-text").val()}))
     # reset the form
+    $('#postModal').modal('toggle')
     $("#twitter-user-text").val("")
 
 
@@ -78,7 +80,10 @@ populateStockHistory = (message) ->
     handleFlip($(this))
   $("#stocks").prepend(flipContainer)
   plot = chart.plot([getChartArray(message.history)], getChartOptions(message.history)).data("plot")
-  console.log(message.history)
+
+  # Update plot on window resize for responsive design
+  $(window).resize (event) ->
+    chart.plot([getChartArray(message.history)], getChartOptions(message.history)).data("plot")
 
 updateStockChart = (message) ->
   if ($("#" + message.symbol).size() > 0)
@@ -124,6 +129,10 @@ addTwitterUserStats = (message) ->
     $("#stocks").prepend(flipContainer)
 
     plot = chart.plot([message.history], getUserChartOptions(message.history)).data("plot");
+
+    # Update plot on window resize for responsive design
+    $(window).resize (event) ->
+      chart.plot([message.history], getUserChartOptions(message.history)).data("plot");
 
 ########################## Common ##########################
 
