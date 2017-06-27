@@ -35,20 +35,20 @@ class TwitterUserController @Inject()(@Named("stocksActor") stocksActor: ActorRe
     Ok(views.html.userprofile())
 //    Ok(views.html.index())
   }
-  def get(symbol: String): Action[AnyContent] = Action.async {
-    logger.info(s"getting stock sentiment for $symbol")
-
-    val futureStockSentiments: Future[Result] = for {
-      tweets <- getTweets(symbol) // get tweets that contain the stock symbol
-      futureSentiments = loadSentimentFromTweets(tweets.json) // queue web requests each tweets' sentiments
-      sentiments <- Future.sequence(futureSentiments) // when the sentiment responses arrive, set them
-    } yield Ok(sentimentJson(sentiments))
-
-    futureStockSentiments.recover {
-      case nsee: NoSuchElementException =>
-        InternalServerError(Json.obj("error" -> JsString("Could not fetch the tweets")))
-    }
-  }
+//  def get(symbol: String): Action[AnyContent] = Action.async {
+//    logger.info(s"getting stock sentiment for $symbol")
+//
+//    val futureStockSentiments: Future[Result] = for {
+//      tweets <- getTweets(symbol) // get tweets that contain the stock symbol
+//      futureSentiments = loadSentimentFromTweets(tweets.json) // queue web requests each tweets' sentiments
+//      sentiments <- Future.sequence(futureSentiments) // when the sentiment responses arrive, set them
+//    } yield Ok(sentimentJson(sentiments))
+//
+//    futureStockSentiments.recover {
+//      case nsee: NoSuchElementException =>
+//        InternalServerError(Json.obj("error" -> JsString("Could not fetch the tweets")))
+//    }
+//  }
 
   /**
    * Creates a websocket.  `acceptOrResult` is preferable here because it returns a
