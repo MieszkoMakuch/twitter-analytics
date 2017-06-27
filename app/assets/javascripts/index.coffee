@@ -25,14 +25,14 @@ $ ->
     # reset the form
     $("#addsymboltext").val("")
 
-  $("#twitter-user-form").submit (event) ->
-    console.log("$(#twitter-user-form).submit (event) ->")
-    event.preventDefault()
-    # send the message to watch the stock
-    ws.send(JSON.stringify({type: "twitterUser", userName: $("#twitter-user-text").val()}))
-    # reset the form
-    $('#postModal').modal('toggle')
-    $("#twitter-user-text").val("")
+#  $("#twitter-user-form").submit (event) ->
+#    console.log("$(#twitter-user-form).submit (event) ->")
+#    event.preventDefault()
+#    # send the message to watch the stock
+#    ws.send(JSON.stringify({type: "twitterUser", userName: $("#twitter-user-text").val()}))
+#    # reset the form
+#    $('#postModal').modal('toggle')
+#    $("#twitter-user-text").val("")
 
   ws.onopen = (event) ->
     if (getQueryVariable("type") == "twitterUsername")
@@ -135,7 +135,7 @@ abbreviateNumber = (number) ->
   SI_POSTFIXES = ["", "k", "M", "G", "T", "P", "E"]
   tier = Math.log10(Math.abs(number)) / 3 | 0
   if(tier == 0)
-    number
+    number.toString()
   else
     postfix = SI_POSTFIXES[tier]
     scale = Math.pow(10, tier * 3)
@@ -147,6 +147,7 @@ abbreviateNumber = (number) ->
 
 updateUserData = (userData) ->
   name = $("<p>").addClass("lead").html(userData.name)
+  console.log("userData.followers_count: with toString() " + userData.followers_count)
   basicStats = $("<p>").html(
     abbreviateNumber(userData.followers_count).bold() + " Followers, " +
     abbreviateNumber(userData.statuses_count).bold() + " Posts")

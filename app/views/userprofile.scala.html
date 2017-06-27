@@ -29,25 +29,24 @@
     </head>
     <body data-ws-url="@routes.HomeController.ws.webSocketURL()">
         @*<div class="navbar navbar-inverse navbar-fixed-top">*@
-            @*<div class="navbar-inner">*@
-                @*<div class="container">*@
-                    @*<a class="brand" href="#">Reactive Stocks</a>*@
-                    @*<form id="addsymbolform" class="navbar-form pull-right">*@
-                        @*<input id="addsymboltext" type="text" class="span2" placeholder="SYMBOL">*@
-                        @*<button type="submit" class="btn">Add Stock</button>*@
-                    @*</form>*@
-                    @*<form id="twitter-user-form" class="navbar-form pull-right">*@
-                        @*<input id="twitter-user-text" type="text" class="span2" placeholder="Twitter username">*@
-                        @*<button type="submit" class="btn">Add User</button>*@
-                    @*</form>*@
-                @*</div>*@
-            @*</div>*@
+        @*<div class="navbar-inner">*@
+        @*<div class="container">*@
+        @*<a class="brand" href="#">Reactive Stocks</a>*@
+        @*<form id="addsymbolform" class="navbar-form pull-right">*@
+        @*<input id="addsymboltext" type="text" class="span2" placeholder="SYMBOL">*@
+        @*<button type="submit" class="btn">Add Stock</button>*@
+        @*</form>*@
+        @*<form id="twitter-user-form" class="navbar-form pull-right">*@
+        @*<input id="twitter-user-text" type="text" class="span2" placeholder="Twitter username">*@
+        @*<button type="submit" class="btn">Add User</button>*@
+        @*</form>*@
+        @*</div>*@
+        @*</div>*@
         @*</div>*@
 
         @*<div id="stocks" class="container">*@
 
         @*</div>*@
-
 
         <div class="wrapper">
             <div class="box">
@@ -68,9 +67,10 @@
                             <li><a href="#"><i class="glyphicon glyphicon-refresh"></i> Refresh</a></li>
                         </ul>
                         <ul class="list-unstyled hidden-xs" id="sidebar-footer">
-                            <li>
-                                <a href="http://usebootstrap.com/theme/facebook"><h3>
-                                    Bootstrap</h3> <i class="glyphicon glyphicon-heart-empty"></i> Bootply</a>
+                            <li style="font-size: 12px;">
+                                <a href="https://github.com/MieszkoMakuch/twitter-analytics" target="blank">
+                                    <p>Created by Mieszko Makuch</p>
+                                    Check out my GitHub repository</a>
                             </li>
                         </ul>
 
@@ -97,7 +97,7 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a href="http://usebootstrap.com/theme/facebook" class="navbar-brand logo">b</a>
+                                <a href="#" class="navbar-brand logo">Twitter Analytics</a>
                             </div>
                             <nav class="collapse navbar-collapse" role="navigation">
                                 <form class="navbar-form navbar-left">
@@ -356,38 +356,37 @@
             </div>
         </div>
 
-
             <!--post modal - original-->
         @*<div id="postModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">*@
-            @*<div class="modal-dialog">*@
-                @*<div class="modal-content">*@
-                    @*<div class="modal-header">*@
-                        @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>*@
-                        @*Update Status*@
-                    @*</div>*@
-                    @*<div class="modal-body">*@
-                        @*<form class="form center-block">*@
-                            @*<div class="form-group">*@
-                                @*<textarea class="form-control input-lg" autofocus="" placeholder="What do you want to share?"></textarea>*@
-                            @*</div>*@
-                        @*</form>*@
-                    @*</div>*@
-                    @*<div class="modal-footer">*@
-                        @*<div>*@
-                            @*<button class="btn btn-primary btn-sm" data-dismiss="modal" aria-hidden="true">Post</button>*@
-                            @*<ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>*@
-                        @*</div>*@
-                    @*</div>*@
-                @*</div>*@
-            @*</div>*@
+        @*<div class="modal-dialog">*@
+        @*<div class="modal-content">*@
+        @*<div class="modal-header">*@
+        @*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>*@
+        @*Update Status*@
+        @*</div>*@
+        @*<div class="modal-body">*@
+        @*<form class="form center-block">*@
+        @*<div class="form-group">*@
+        @*<textarea class="form-control input-lg" autofocus="" placeholder="What do you want to share?"></textarea>*@
+        @*</div>*@
+        @*</form>*@
+        @*</div>*@
+        @*<div class="modal-footer">*@
+        @*<div>*@
+        @*<button class="btn btn-primary btn-sm" data-dismiss="modal" aria-hidden="true">Post</button>*@
+        @*<ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>*@
+        @*</div>*@
+        @*</div>*@
+        @*</div>*@
+        @*</div>*@
         @*</div>*@
 
         <div id="postModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <form class="modal-dialog" method="get">
-            @*<form id="twitter-user-form" class="modal-dialog" method="get">*@
+                @*<form id="twitter-user-form" class="modal-dialog" method="get">*@
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                         Update Status
                     </div>
                     <div class="modal-body">
@@ -395,19 +394,20 @@
                             <div class="form-group">
                                 <input id="twitter-user-text" type="text" class="form-control input-lg" name="userName" autofocus="" placeholder="Twitter username">
                                 <label class="radio-inline">
-                                    <input type="radio" name="type" id="inlineRadio1" value="twitterUsername" checked> Twitter username
+                                    <input type="radio" name="type" id="inlineRadio1" value="twitterUsername" checked>
+                                    Twitter username
                                 </label>
                                 <label class="radio-inline">
-                                    <input type="radio" name="type" id="inlineRadio2" value="option2"> 2
+                                    <input type="radio" name="type" id="inlineRadio2" value="location"> Location
                                 </label>
                                 <label class="radio-inline">
                                     <input type="radio" name="type" id="inlineRadio3" value="option3"> 3
-                                </label>                            </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div>
-                            <input type="submit" value="Submit">
                             <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">Add User</button>
                             @*<button type="submit" class="btn btn-primary btn-sm" data-dismiss="modal" aria-hidden="true">Analyse profile</button>*@
                             <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>

@@ -45,12 +45,7 @@ class UserActor @Inject()(@Assisted out: ActorRef,
       out ! stockUpdateMessage
 
     // Twitter user
-    case StockUpdateT(symbol, price) =>
-      val stockUpdateMessage = Json.obj("type" -> "twitterUserStatsUpdate", "symbol" -> symbol, "price" -> price.doubleValue())
-      out ! stockUpdateMessage
-
     case TwitterUserStats(username, userData, profileImageUrl, topHashtags) =>
-      print(userData.toString)
       val topHashtagsJson = topHashtags map {case (hashtag: String, frequency: Int) => Seq(Json.toJson(hashtag), Json.toJson(frequency))}
       val userDataJson = JsonWrites.userDataToJson(userData)
       val stockUpdateMessage = Json.obj("type" -> "twitterUserStats", "userData" -> userDataJson, "topHashtags" -> topHashtagsJson)
@@ -68,8 +63,7 @@ class UserActor @Inject()(@Assisted out: ActorRef,
           stocksActor ! WatchStock(symbol)
         case "twitterUser" =>
           val userName = (json \ "userName").as[String]
-          Console.print(s"Received twitterUser, username=$userName\n")
-          twitterUsersActor ! WatchStockT(userName)
+          twitterUsersActor ! WatchTwitterUser(userName)
       }
   }
 }

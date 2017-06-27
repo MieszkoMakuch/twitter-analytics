@@ -45,47 +45,43 @@ class TwitterUserActor(userName: String) extends Actor with ActorLogging {
     } yield(userData, topHashtags)
 
     userStats.map { userStats =>
-      println("image url userStats._1:" + userStats._1)
       watchers.foreach(_ ! TwitterUserStats(userName, userStats._1, userStats._1.profile_image_url.default, userStats._2))
     }
   }
 
   protected[this] var watchers: HashSet[ActorRef] = HashSet.empty[ActorRef]
 
-  private val fetchLatestInterval = 10000.millis
+  private val updateInterval = 10000.millis
   // Fetch the latest stock value every 75ms
-  val stockTick = {
+  val twitterUserTick = {
     // scheduler should use the system dispatcher
-    context.system.scheduler.schedule(Duration.Zero, fetchLatestInterval, self, FetchLatestT)(context.system.dispatcher)
+    context.system.scheduler.schedule(Duration.Zero, updateInterval, self, TwitterUserUpdate)(context.system.dispatcher)
   }
 
   def receive = LoggingReceive {
-    case FetchLatestT =>
+    case TwitterUserUpdate =>
       // notify watchers
       getUserStats(sender, userName)
-    case WatchStockT(_) =>
-      Console.print(s"Received case WatchStockT(_) =>\n")
+    case WatchTwitterUser(_) =>
       // add the watcher to the list
       watchers = watchers + sender
       // send the stock history to the user
 //      sender ! StockHistoryT(symbol, stockHistory.toList)
       getUserStats(sender, userName)
-    case UnwatchStockT(_) =>
+    case UnwatchTwitterUser(_) =>
       watchers = watchers - sender
       if (watchers.isEmpty) {
-        stockTick.cancel()
+        twitterUserTick.cancel()
         context.stop(self)
       }
   }
 }
 
 
-case object FetchLatestT
-
-case class StockUpdateT(symbol: String, price: Number)
+case object TwitterUserUpdate
 
 case class TwitterUserStats(username: String, userData: User, profileImageUrl: String, topHashtags: Seq[(String, Int)])
 
-case class WatchStockT(symbol: String)
+case class WatchTwitterUser(symbol: String)
 
-case class UnwatchStockT(symbol: Option[String])
+case class UnwatchTwitterUser(symbol: Option[String])
