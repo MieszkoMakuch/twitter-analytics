@@ -10,6 +10,8 @@ $ ->
       when "stockupdate"
         updateStockChart(message)
       when "twitterUserStats"
+        console.log(message)
+        updateUserData(message.userData)
         addTwitterUserStats(message)
       when "twitterUserStatsUpdate"
 #        addTwitterUserStats(message)
@@ -113,26 +115,50 @@ getUserChartOptions = (data) ->
     mode: "categories"
     tickLength: 0
 
-addTwitterUserStats = (message) ->
-  if ($("#" + message.symbol).size() > 0)
-    plot = $("#" + message.symbol)
-    plot.plot([message.history], getUserChartOptions(message.history)).data("plot")
+abbreviateNumber = (number) ->
+  SI_POSTFIXES = ["", "k", "M", "G", "T", "P", "E"]
+  tier = Math.log10(Math.abs(number)) / 3 | 0
+  if(tier == 0)
+    number
   else
-    chart = $("<div>").addClass("chart").prop("id", message.symbol)
+    postfix = SI_POSTFIXES[tier]
+    scale = Math.pow(10, tier * 3)
+    scaled = number / scale
+    formatted = scaled.toFixed(1) + ''
+    if (/\.0$/.test(formatted))
+      formatted = formatted.substr(0, formatted.length - 2)
+    formatted + postfix
+
+updateUserData = (userData) ->
+  name = $("<p>").addClass("lead").html(userData.name)
+  basicStats = $("<p>").html(
+    abbreviateNumber(userData.followers_count).bold() + " Followers, " +
+    abbreviateNumber(userData.statuses_count).bold() + " Posts")
+  $("#user-basic-data").empty()
+  $("#user-basic-data").append(name)
+  $("#user-basic-data").append(basicStats)
+  $("#profile-image").attr("src",userData.profile_image_url);
+
+addTwitterUserStats = (message) ->
+  if ($("#" + message.username).size() > 0)
+    plot = $("#" + message.username)
+    plot.plot([message.topHashtags], getUserChartOptions(message.topHashtags)).data("plot")
+  else
+    chart = $("<div>").addClass("chart").prop("id", message.username)
     chartHolder = $("<div>").addClass("chart-holder").append(chart)
     chartHolder.append($("<p>").text("values are simulated"))
     detailsHolder = $("<div>").addClass("details-holder")
-    flipper = $("<div>").addClass("flipper").append(chartHolder).append(detailsHolder).attr("data-content", message.symbol).prop("id", "flipper" + message.symbol)
+    flipper = $("<div>").addClass("flipper").append(chartHolder).append(detailsHolder).attr("data-content", message.username).prop("id", "flipper" + message.username)
     flipContainer = $("<div>").addClass("flip-container").append(flipper).click (event) ->
       handleFlip($(this))
-    $("#flipper" + message.symbol).remove()
+    $("#flipper" + message.username).remove()
     $("#stocks").prepend(flipContainer)
 
-    plot = chart.plot([message.history], getUserChartOptions(message.history)).data("plot");
+    plot = chart.plot([message.topHashtags], getUserChartOptions(message.topHashtags)).data("plot");
 
     # Update plot on window resize for responsive design
     $(window).resize (event) ->
-      chart.plot([message.history], getUserChartOptions(message.history)).data("plot");
+      chart.plot([message.topHashtags], getUserChartOptions(message.topHashtags)).data("plot");
 
 ########################## Common ##########################
 

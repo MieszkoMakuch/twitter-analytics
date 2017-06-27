@@ -4,10 +4,12 @@ import javax.inject._
 
 import akka.actor._
 import akka.event.LoggingReceive
+import com.danielasfregola.twitter4s.entities.User
 import com.google.inject.assistedinject.Assisted
 import play.api.Configuration
 import play.api.libs.concurrent.InjectedActorSupport
 import play.api.libs.json._
+import utils.JsonWrites
 
 class UserActor @Inject()(@Assisted out: ActorRef,
                           @Named("stocksActor") stocksActor: ActorRef,
@@ -47,9 +49,11 @@ class UserActor @Inject()(@Assisted out: ActorRef,
       val stockUpdateMessage = Json.obj("type" -> "twitterUserStatsUpdate", "symbol" -> symbol, "price" -> price.doubleValue())
       out ! stockUpdateMessage
 
-    case StockHistoryT(symbol, history) =>
-      val numberSeq = history map {case (hashtag: String, frequency: Int) => Seq(Json.toJson(hashtag), Json.toJson(frequency))}
-      val stockUpdateMessage = Json.obj("type" -> "twitterUserStats", "symbol" -> symbol, "history" -> numberSeq)
+    case TwitterUserStats(username, userData, profileImageUrl, topHashtags) =>
+      print(userData.toString)
+      val topHashtagsJson = topHashtags map {case (hashtag: String, frequency: Int) => Seq(Json.toJson(hashtag), Json.toJson(frequency))}
+      val userDataJson = JsonWrites.userDataToJson(userData)
+      val stockUpdateMessage = Json.obj("type" -> "twitterUserStats", "userData" -> userDataJson, "topHashtags" -> topHashtagsJson)
       out ! stockUpdateMessage
 
 
