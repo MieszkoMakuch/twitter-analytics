@@ -1,4 +1,5 @@
 @()(implicit r: Request[_])
+
 <!DOCTYPE html>
 
 <html>
@@ -382,7 +383,8 @@
         @*</div>*@
 
         <div id="postModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <form id="twitter-user-form" class="modal-dialog">
+            <form class="modal-dialog" method="get">
+            @*<form id="twitter-user-form" class="modal-dialog" method="get">*@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">�</button>
@@ -391,13 +393,21 @@
                     <div class="modal-body">
                         <div class="form center-block">
                             <div class="form-group">
-                                <input id="twitter-user-text" type="text" class="form-control input-lg" autofocus="" placeholder="Twitter username">
-                                @*<input id="twitter-user-text" type="text" class="form-control input-lg" autofocus="" placeholder="Enter twitter username">*@
-                            </div>
+                                <input id="twitter-user-text" type="text" class="form-control input-lg" name="userName" autofocus="" placeholder="Twitter username">
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" id="inlineRadio1" value="twitterUsername" checked> Twitter username
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" id="inlineRadio2" value="option2"> 2
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="type" id="inlineRadio3" value="option3"> 3
+                                </label>                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <div>
+                            <input type="submit" value="Submit">
                             <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">Add User</button>
                             @*<button type="submit" class="btn btn-primary btn-sm" data-dismiss="modal" aria-hidden="true">Analyse profile</button>*@
                             <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>

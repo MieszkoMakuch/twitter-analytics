@@ -34,6 +34,22 @@ $ ->
     $('#postModal').modal('toggle')
     $("#twitter-user-text").val("")
 
+  ws.onopen = (event) ->
+    if (getQueryVariable("type") == "twitterUsername")
+      ws.send(JSON.stringify({type: "twitterUser", userName: getQueryVariable("userName")}))
+    else
+      console.error("Unknow type=" + getQueryVariable("type"))
+
+getQueryVariable = (variable) ->
+  query = window.location.search.substring(1)
+  vars = query.split("&")
+  i = 0
+
+  while i < vars.length
+    pair = vars[i].split("=")
+    return pair[1]  if pair[0] is variable
+    i++
+  false
 
 ########################## Stock plot ##########################
 

@@ -36,6 +36,11 @@ class HomeController @Inject()(@Named("stocksActor") stocksActor: ActorRef,
 //    Ok(views.html.index())
   }
 
+//  def twitterUser(userName: String) = Action {implicit request =>
+//    println("def twitterUser(userName: String): " + userName)
+//    Ok(views.html.userprofile(userName))
+//  }
+
   /**
    * Creates a websocket.  `acceptOrResult` is preferable here because it returns a
    * Future[Flow], which is required internally.
