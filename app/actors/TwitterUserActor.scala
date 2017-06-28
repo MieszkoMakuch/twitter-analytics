@@ -13,7 +13,7 @@ import scala.concurrent.Future
 
 class TwitterUserActor(userName: String) extends Actor with ActorLogging {
 
-  def getTopHashtags(tweets: Seq[Tweet], n: Int = 10): Seq[(String, Int)] = {
+  private def getTopHashtags(tweets: Seq[Tweet], n: Int = 5): Seq[(String, Int)] = {
     val hashtags: Seq[Seq[HashTag]] = tweets.map { tweet =>
       tweet.entities.map(_.hashtags).getOrElse(Seq.empty)
     }
@@ -22,18 +22,11 @@ class TwitterUserActor(userName: String) extends Actor with ActorLogging {
     hashtagFrequencies.toSeq.sortBy { case (entity, frequency) => -frequency }.take(n)
   }
 
-  def getUserStats(sender: ActorRef, symbol: String) = {
+  private def getUserStats(sender: ActorRef, symbol: String) = {
     val client = TwitterRestClient()
 
-//    val result = client.userTimelineForUser(screen_name = userName, count = 200).map { ratedData =>
-//      val tweets = ratedData.data
-//      val topHashtags: Seq[(String, Int)] = getTopHashtags(tweets)
-////      sender ! StockHistoryT(userName, topHashtags)
-//      watchers.foreach(_ ! TwitterUserStats(userName, topHashtags))
-//      println("After sender ! StockHistoryT(userName, topHashtags)")
-//    }
-
     val topHashtagsFuture = client.userTimelineForUser(screen_name = userName, count = 200).map { ratedData =>
+      println("Twitter user rate limit: " + ratedData.rate_limit)
       val tweets = ratedData.data
       val topHashtags: Seq[(String, Int)] = getTopHashtags(tweets)
       topHashtags
@@ -51,22 +44,21 @@ class TwitterUserActor(userName: String) extends Actor with ActorLogging {
 
   protected[this] var watchers: HashSet[ActorRef] = HashSet.empty[ActorRef]
 
+  // send updated stats
   private val updateInterval = 10000.millis
-  // Fetch the latest stock value every 75ms
-  val twitterUserTick = {
+  private val twitterUserTick = {
     // scheduler should use the system dispatcher
     context.system.scheduler.schedule(Duration.Zero, updateInterval, self, TwitterUserUpdate)(context.system.dispatcher)
   }
 
   def receive = LoggingReceive {
     case TwitterUserUpdate =>
-      // notify watchers
+      // send watchers updated stats
       getUserStats(sender, userName)
     case WatchTwitterUser(_) =>
       // add the watcher to the list
       watchers = watchers + sender
       // send the stock history to the user
-//      sender ! StockHistoryT(symbol, stockHistory.toList)
       getUserStats(sender, userName)
     case UnwatchTwitterUser(_) =>
       watchers = watchers - sender

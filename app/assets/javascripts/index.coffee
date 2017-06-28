@@ -13,10 +13,14 @@ $ ->
         console.log(message)
         updateUserData(message.userData)
         addTwitterUserStats(message)
+      when "locationStats"
+        console.log(message)
+        updateLocationData(message)
+        addLocationStats(message)
       when "twitterUserStatsUpdate"
 #        addTwitterUserStats(message)
       else
-        console.log(message)
+        console.error("Unknown message type: " + message.type)
 
   $("#addsymbolform").submit (event) ->
     event.preventDefault()
@@ -25,18 +29,24 @@ $ ->
     # reset the form
     $("#addsymboltext").val("")
 
-#  $("#twitter-user-form").submit (event) ->
-#    console.log("$(#twitter-user-form).submit (event) ->")
-#    event.preventDefault()
-#    # send the message to watch the stock
-#    ws.send(JSON.stringify({type: "twitterUser", userName: $("#twitter-user-text").val()}))
-#    # reset the form
-#    $('#postModal').modal('toggle')
-#    $("#twitter-user-text").val("")
+  #  $("#twitter-user-form").submit (event) ->
+  #    console.log("$(#twitter-user-form).submit (event) ->")
+  #    event.preventDefault()
+  #    # send the message to watch the stock
+  #    ws.send(JSON.stringify({type: "twitterUser", userName: $("#twitter-user-text").val()}))
+  #    # reset the form
+  #    $('#postModal').modal('toggle')
+  #    $("#twitter-user-text").val("")
 
   ws.onopen = (event) ->
-    if (getQueryVariable("type") == "twitterUsername")
-      ws.send(JSON.stringify({type: "twitterUser", userName: getQueryVariable("userName")}))
+    if (getQueryVariable("type") == "location")
+      ws.send(JSON.stringify({
+        type: "location",
+        locationLat: getQueryVariable("locationLat"),
+        locationLng: getQueryVariable("locationLng")
+      }))
+    else if (getQueryVariable("type") == "twitterUsername")
+      ws.send(JSON.stringify({type: "twitterUser", userName: getQueryVariable("content")}))
     else
       console.error("Unknow type=" + getQueryVariable("type"))
 
@@ -113,7 +123,7 @@ updateStockChart = (message) ->
     # update the yaxes if either the min or max is now out of the acceptable range
     yaxes = plot.getOptions().yaxes[0]
     if ((getAxisMin(data) < yaxes.min) || (getAxisMax(data) > yaxes.max))
-      # reseting yaxes
+# reseting yaxes
       yaxes.min = getAxisMin(data)
       yaxes.max = getAxisMax(data)
       plot.setupGrid()
@@ -131,30 +141,16 @@ getUserChartOptions = (data) ->
     mode: "categories"
     tickLength: 0
 
-abbreviateNumber = (number) ->
-  SI_POSTFIXES = ["", "k", "M", "G", "T", "P", "E"]
-  tier = Math.log10(Math.abs(number)) / 3 | 0
-  if(tier == 0)
-    number.toString()
-  else
-    postfix = SI_POSTFIXES[tier]
-    scale = Math.pow(10, tier * 3)
-    scaled = number / scale
-    formatted = scaled.toFixed(1) + ''
-    if (/\.0$/.test(formatted))
-      formatted = formatted.substr(0, formatted.length - 2)
-    formatted + postfix
-
 updateUserData = (userData) ->
   name = $("<p>").addClass("lead").html(userData.name)
   console.log("userData.followers_count: with toString() " + userData.followers_count)
   basicStats = $("<p>").html(
     abbreviateNumber(userData.followers_count).bold() + " Followers, " +
-    abbreviateNumber(userData.statuses_count).bold() + " Posts")
+      abbreviateNumber(userData.statuses_count).bold() + " Posts")
   $("#user-basic-data").empty()
   $("#user-basic-data").append(name)
   $("#user-basic-data").append(basicStats)
-  $("#profile-image").attr("src",userData.profile_image_url);
+  $("#profile-image").attr("src", userData.profile_image_url);
 
 addTwitterUserStats = (message) ->
   if ($("#" + message.username).size() > 0)
@@ -177,7 +173,88 @@ addTwitterUserStats = (message) ->
     $(window).resize (event) ->
       chart.plot([message.topHashtags], getUserChartOptions(message.topHashtags)).data("plot");
 
+########################## Location stats ##########################
+getLocationChartOptions = (data) ->
+  series:
+    bars:
+      show: true
+      barWidth: 0.6
+      align: "center"
+  xaxis:
+    mode: "categories"
+    tickLength: 0
+
+updateLocationData = (message) ->
+  name = $("<p>").addClass("lead").html(message.name)
+  #  console.log("message.followers_count: with toString() " + message.followers_count)
+  #  basicStats = $("<p>").html(
+  #    abbreviateNumber(message.followers_count).bold() + " Followers, " +
+  #      abbreviateNumber(message.statuses_count).bold() + " Posts")
+  $("#user-basic-data").empty()
+  $("#user-basic-data").append(name)
+#  $("#user-basic-data").append(basicStats)
+#  $("#profile-image").attr("src",message.profile_image_url);
+
+addLocationStats = (message) ->
+
+  panelHeading =
+    """
+    <div class="panel-heading">
+        <a href="#" class="pull-right">View all</a>
+        <h4>Trending topics in """ + message.name + """</h4>
+    </div>
+    """
+
+  trendsList = $("<div>").addClass("list-group")
+  for trend, i in message.locationTrends
+    listItem = $("<a>", href: trend.url, target: "blank")
+      .addClass("list-group-item")
+      .append(i+1 + ". " + trend.name)
+      .append("""<span class="check-twitter">Check out on Twitter</span>""")
+    trendsList.append(listItem)
+  panelBody = $("<div>").addClass("panel-body")
+  panelBody.append(trendsList)
+
+  panel = $("<div>").addClass("panel panel-default")
+  panel.append(panelHeading)
+  panel.append(panelBody)
+  $("#stocks").prepend(panel)
+
+#  if ($("#" + message.username).size() > 0)
+#    plot = $("#" + message.username)
+#    plot.plot([message.topHashtags], getLocationChartOptions(message.topHashtags)).data("plot")
+#  else
+#    chart = $("<div>").addClass("chart").prop("id", message.username)
+#    chartHolder = $("<div>").addClass("chart-holder").append(chart)
+#    chartHolder.append($("<p>").text("values are simulated"))
+#    detailsHolder = $("<div>").addClass("details-holder")
+#    flipper = $("<div>").addClass("flipper").append(chartHolder).append(detailsHolder).attr("data-content", message.username).prop("id", "flipper" + message.username)
+#    flipContainer = $("<div>").addClass("flip-container").append(flipper).click (event) ->
+#      handleFlip($(this))
+#    $("#flipper" + message.username).remove()
+#    $("#stocks").prepend(flipContainer)
+#
+#    plot = chart.plot([message.topHashtags], getLocationChartOptions(message.topHashtags)).data("plot");
+#
+#    # Update plot on window resize for responsive design
+#    $(window).resize (event) ->
+#      chart.plot([message.topHashtags], getLocationChartOptions(message.topHashtags)).data("plot");
+
 ########################## Common ##########################
+
+abbreviateNumber = (number) ->
+  SI_POSTFIXES = ["", "k", "M", "G", "T", "P", "E"]
+  tier = Math.log10(Math.abs(number)) / 3 | 0
+  if(tier == 0)
+    number.toString()
+  else
+    postfix = SI_POSTFIXES[tier]
+    scale = Math.pow(10, tier * 3)
+    scaled = number / scale
+    formatted = scaled.toFixed(1) + ''
+    if (/\.0$/.test(formatted))
+      formatted = formatted.substr(0, formatted.length - 2)
+    formatted + postfix
 
 handleFlip = (container) ->
   if (container.hasClass("flipped"))
@@ -211,3 +288,73 @@ handleFlip = (container) ->
     detailsHolder = container.find(".details-holder")
     detailsHolder.append($("<h4>").text("Determing whether you should buy or sell based on the sentiment of recent tweets..."))
     detailsHolder.append($("<div>").addClass("progress progress-striped active").append($("<div>").addClass("bar").css("width", "100%")))
+
+########################## Google maps ##########################
+
+#// Note: This example requires that you consent to location sharing when
+#// prompted by your browser. If you see the error "The Geolocation service
+#// failed.", it means you probably did not give permission for the browser to
+#// locate you.
+map = undefined
+infoWindow = undefined
+userPosition = undefined
+
+window.initMap = ->
+  map = new (google.maps.Map)(document.getElementById('map'),
+    center:
+      lat: -34.397
+      lng: 150.644
+    zoom: 6)
+  infoWindow = new (google.maps.InfoWindow)
+  # Try HTML5 geolocation.
+  if navigator.geolocation
+    navigator.geolocation.getCurrentPosition ((position) ->
+      userPosition =
+        lat: position.coords.latitude
+        lng: position.coords.longitude
+      console.log 'Pos: lat=' + userPosition.lat + ', lng=' + userPosition.lng
+      $("#locationLat").val(userPosition.lat)
+      $("#locationLng").val(userPosition.lng)
+      infoWindow.setPosition userPosition
+      infoWindow.setContent 'Location found.'
+      infoWindow.open map
+      map.setCenter userPosition
+      return
+    ), ->
+      handleLocationError true, infoWindow, map.getCenter()
+      return
+  else
+# Browser doesn't support Geolocation
+    handleLocationError false, infoWindow, map.getCenter()
+  return
+
+handleLocationError = (browserHasGeolocation, infoWindow, pos) ->
+  infoWindow.setPosition pos
+  infoWindow.setContent if browserHasGeolocation then 'Error: The Geolocation service failed.' else 'Error: Your browser doesn\'t support geolocation.'
+  infoWindow.open map
+  return
+
+
+# Load google map when modal is opened
+$('#postModal').on 'shown.bs.modal', ->
+  mapScript =
+    """
+    <script async defe
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAb9dQMdg9CP9ZPB-rrkfqpyd_AjlLqh4I&callback=initMap">
+    </script>
+    """
+  $("#postModal").prepend(mapScript)
+  console.log("Modal show")
+  $('#twitter-user-text').focus()
+  return
+
+$(document).ready ->
+  $('div.bhoechie-tab-menu>div.list-group>a').click (e) ->
+    e.preventDefault()
+    $(this).siblings('a.active').removeClass 'active'
+    $(this).addClass 'active'
+    index = $(this).index()
+    $('div.bhoechie-tab>div.bhoechie-tab-content').removeClass 'active'
+    $('div.bhoechie-tab>div.bhoechie-tab-content').eq(index).addClass 'active'
+    return
+  return

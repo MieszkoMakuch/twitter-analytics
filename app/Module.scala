@@ -9,6 +9,7 @@ class Module extends AbstractModule with AkkaGuiceSupport {
     bindActor[StocksActor]("stocksActor")
     // Twitter user actor
     bindActor[TwitterUsersActor]("twitterUsersActor")
+    bindActor[LocationsActor]("locationsActor")
     bindActor[UserParentActor]("userParentActor")
     bindActorFactory[UserActor, UserActor.Factory]
   }

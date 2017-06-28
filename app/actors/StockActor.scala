@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 class StockActor(symbol: String) extends Actor with ActorLogging {
   private val random = scala.util.Random
 
-  private val fetchLatestInterval = 75.millis
+  private val fetchLatestInterval = 750.millis
 
   lazy val stockQuote: StockQuote = new FakeStockQuote
 

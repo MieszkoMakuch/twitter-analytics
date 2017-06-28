@@ -4,7 +4,7 @@ import javax.inject._
 
 import akka.actor._
 import akka.event.LoggingReceive
-import com.danielasfregola.twitter4s.entities.User
+import com.danielasfregola.twitter4s.entities.{LocationTrends, Trend, User}
 import com.google.inject.assistedinject.Assisted
 import play.api.Configuration
 import play.api.libs.concurrent.InjectedActorSupport
@@ -14,6 +14,7 @@ import utils.JsonWrites
 class UserActor @Inject()(@Assisted out: ActorRef,
                           @Named("stocksActor") stocksActor: ActorRef,
                           @Named("twitterUsersActor") twitterUsersActor: ActorRef,
+                          @Named("locationsActor") locationsActor: ActorRef,
                           configuration: Configuration) extends Actor with ActorLogging {
 
 
@@ -48,8 +49,19 @@ class UserActor @Inject()(@Assisted out: ActorRef,
     case TwitterUserStats(username, userData, profileImageUrl, topHashtags) =>
       val topHashtagsJson = topHashtags map {case (hashtag: String, frequency: Int) => Seq(Json.toJson(hashtag), Json.toJson(frequency))}
       val userDataJson = JsonWrites.userDataToJson(userData)
-      val stockUpdateMessage = Json.obj("type" -> "twitterUserStats", "userData" -> userDataJson, "topHashtags" -> topHashtagsJson)
-      out ! stockUpdateMessage
+      val twitterUserUpdate = Json.obj("type" -> "twitterUserStats", "userData" -> userDataJson, "topHashtags" -> topHashtagsJson)
+      out ! twitterUserUpdate
+
+    // Location
+    case LocationStats(name, trends) =>
+      println("case LocationStats(username, userData, profileImageUrl, locationTrends) =>")
+
+      val locationTrendsJson = trends map {trend: Trend => Json.obj("name" -> trend.name, "url" -> trend.url)}
+      val locationStatsUpdate = Json.obj(
+        "type" -> "locationStats",
+        "name" -> name,
+        "locationTrends" -> locationTrendsJson)
+      out ! locationStatsUpdate
 
 
     // From user
@@ -64,6 +76,12 @@ class UserActor @Inject()(@Assisted out: ActorRef,
         case "twitterUser" =>
           val userName = (json \ "userName").as[String]
           twitterUsersActor ! WatchTwitterUser(userName)
+        case "location" =>
+          println("case \"location\" =>" + json.toString())
+          val locationLat = (json \ "locationLat").as[String].toDouble
+          val locationLng = (json \ "locationLng").as[String].toDouble
+
+          locationsActor ! WatchLocation(LocationCoordinates(locationLat, locationLng))
       }
   }
 }
