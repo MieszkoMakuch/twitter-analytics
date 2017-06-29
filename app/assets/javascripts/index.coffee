@@ -207,7 +207,7 @@ addLocationStats = (message) ->
 
   trendsList = $("<div>").addClass("list-group")
   for trend, i in message.locationTrends
-    listItem = $("<a>", href: trend.url, target: "blank")
+    listItem = $("<a>", href: trend.url, target: "_blank")
       .addClass("list-group-item")
       .append(i+1 + ". " + trend.name)
       .append("""<span class="check-twitter">Check out on Twitter</span>""")
@@ -302,9 +302,9 @@ userPosition = undefined
 window.initMap = ->
   map = new (google.maps.Map)(document.getElementById('map'),
     center:
-      lat: -34.397
-      lng: 150.644
-    zoom: 6)
+      lat: 0
+      lng: 0
+    zoom: 1)
   infoWindow = new (google.maps.InfoWindow)
   # Try HTML5 geolocation.
   if navigator.geolocation
@@ -316,9 +316,10 @@ window.initMap = ->
       $("#locationLat").val(userPosition.lat)
       $("#locationLng").val(userPosition.lng)
       infoWindow.setPosition userPosition
-      infoWindow.setContent 'Location found.'
+      infoWindow.setContent 'Your location'
       infoWindow.open map
       map.setCenter userPosition
+      map.setZoom 8
       return
     ), ->
       handleLocationError true, infoWindow, map.getCenter()

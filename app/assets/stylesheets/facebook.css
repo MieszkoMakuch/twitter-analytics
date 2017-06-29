@@ -224,7 +224,7 @@ h1,h2,h3 {
 .modal-footer {
     display: inline-block;
     width: 100%;
-    padding: 19px 20px 10px;
+    padding: 19px 0px 10px;
     margin-top: 0px;
     text-align: right;
 }
@@ -264,6 +264,9 @@ small.text-muted {
 
 }
 
+.list-group-item {
+    padding: 15px 15px;
+}
 
 /*
  * off canvas sidebar
@@ -295,9 +298,10 @@ small.text-muted {
 }
 
 #map  {
-    width: 100%;
-    height: 300px;
+    height: 320px;
     margin-top: 20px;
+    margin-left: -35px;
+    margin-right: -16px;
 }
 /*
  * "Simple Vertical Tab"
@@ -335,7 +339,7 @@ div.bhoechie-tab-menu div.list-group>a{
 }
 div.bhoechie-tab-menu div.list-group>a .glyphicon,
 div.bhoechie-tab-menu div.list-group>a .fa {
-    color: #5A55A3;
+    color: #3B5998;
 }
 div.bhoechie-tab-menu div.list-group>a:first-child{
     border-top-right-radius: 0;
@@ -348,8 +352,8 @@ div.bhoechie-tab-menu div.list-group>a:last-child{
 div.bhoechie-tab-menu div.list-group>a.active,
 div.bhoechie-tab-menu div.list-group>a.active .glyphicon,
 div.bhoechie-tab-menu div.list-group>a.active .fa{
-    background-color: #5A55A3;
-    background-image: #5A55A3;
+    background-color: #3B5998;
+    background-image: #3B5998;
     color: #ffffff;
 }
 div.bhoechie-tab-menu div.list-group>a.active:after{
@@ -361,7 +365,7 @@ div.bhoechie-tab-menu div.list-group>a.active:after{
     border-left: 0;
     border-bottom: 13px solid transparent;
     border-top: 13px solid transparent;
-    border-left: 10px solid #5A55A3;
+    border-left: 10px solid #3B5998;
 }
 
 div.bhoechie-tab-content{
@@ -375,7 +379,7 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
     display: none;
 }
 
-.glyphicon-list {
+.glyphicon-intabs {
     margin-top: 5px;
     margin-bottom: 15px;
     font-size: 40px;
@@ -393,4 +397,15 @@ div.bhoechie-tab div.bhoechie-tab-content:not(.active){
 
 a:hover .check-twitter {
     display: inline;
+}
+
+@media screen and (min-width: 768px) {
+    .modal-dialog {
+        width: 760px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    .form-control {
+        display: grid !important;
+    }
 }

@@ -382,8 +382,8 @@
 
         <div id="postModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             @*<div class="container">*@
-                @*<div class="row">*@
-                @*</div>*@
+            @*<div class="row">*@
+            @*</div>*@
             @*</div>*@
             <form class="modal-dialog" >
                 @*<form id="twitter-user-form" class="modal-dialog" method="get">*@
@@ -398,101 +398,112 @@
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
                                 <div class="list-group">
                                     <a href="#" class="list-group-item active text-center">
-                                        <h4 class="glyphicon glyphicon-list glyphicon-globe"></h4><br/>Location
+                                        <h4 class="glyphicon glyphicon-intabs glyphicon-globe"></h4><br/>Near me
                                     </a>
                                     <a href="#" class="list-group-item text-center">
-                                        <h4 class="glyphicon glyphicon-list glyphicon-globe"></h4><br/>Twitter user
+                                        <h4 class="glyphicon glyphicon-intabs glyphicon-user"></h4><br/>Twitter user
                                     </a>
                                     <a href="#" class="list-group-item text-center">
-                                        <h4 class="glyphicon-list glyphicon-globe"></h4><br/>Hotel
+                                        <h4 class="glyphicon glyphicon-intabs glyphicon-home"></h4><br/>Hotel
                                     </a>
                                     <a href="#" class="list-group-item text-center">
-                                        <h4 class="glyphicon glyphicon-list glyphicon-cutlery"></h4><br/>Restaurant
+                                        <h4 class="glyphicon glyphicon-intabs glyphicon-cutlery"></h4><br/>Restaurant
                                     </a>
                                     <a href="#" class="list-group-item text-center">
-                                        <h4 class="glyphicon glyphicon-list glyphicon-credit-card"></h4><br/>Credit Card
+                                        <h4 class="glyphicon glyphicon-intabs glyphicon-credit-card"></h4><br/>
+                                        Credit Card
                                     </a>
+                                    @*<a href="#" class="list-group-item text-center">*@
+                                        @*<h4 class="glyphicon glyphicon-intabs glyphicon-film"></h4><br/>*@
+                                        @*Films*@
+                                    @*</a>*@
                                 </div>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
                                     <!-- flight section -->
                                 <div class="bhoechie-tab-content active">
-                                    <center>
+                                    <form class="form-group form center-block" method="get">
                                         <h2 style="margin-top: 0;
-                                            color: #55518a">Location</h2>
-                                        <h3 style="margin-top: 0;
-                                            color: #55518a">Trending topics and more</h3>
-                                        <form class="form-group form center-block" method="get">
-                                            <input id="locationLat" type="text" class="form-control input-lg" name="locationLat" autofocus="" placeholder="Location latitude">
-                                            <input id="locationLng" type="text" class="form-control input-lg" name="locationLng" autofocus="" placeholder="Location longitude">
-                                            <input type="radio" name="type" id="inlineRadio1" value="location" checked>
-                                            <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">Analyze location</button>
-                                        </form>
+                                            color: #3B5998">Near me</h2>
+                                        <h4 style="margin-top: 0;
+                                            color: #3B5998">Find neares trends on twitter</h4>
+                                        <div class="form-inline">
+                                            <div class="form-group">
+                                                <label>Latitude: </label>
+                                                <input id="locationLat" type="text" class="form-control " name="locationLat" autofocus="" placeholder="Loading...">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Longitude: </label>
+                                                <input id="locationLng" type="text" class="form-control " name="locationLng" autofocus="" placeholder="Loading...">
+                                            </div>
+                                            <input type="radio" name="type" id="inlineRadio1" class="hidden" value="location" checked>
+                                        </div>
                                         <div id="map"></div>
-                                        @*<h1 class="glyphicon glyphicon-plane" style="font-size: 14em;*@
-                                            @*color: #55518a"></h1>*@
-                                    </center>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">
+                                                Analyze location</button>
+                                            <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>
+                                        </div>
+                                    </form>
                                 </div>
                                     <!-- train section -->
                                 <div class="bhoechie-tab-content">
-                                    <center>
-                                        <form class="form-group form center-block" method="get">
-                                            <input id="twitter-user-text" type="text" class="form-control input-lg" name="content" autofocus="" placeholder="Twitter username">
-                                            <input type="radio" name="type" id="inlineRadio1" value="twitterUsername" checked>
-                                            <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">Analyze Twitter user</button>
-                                        </form>
-                                        <h1 class="glyphicon glyphicon-user" style="font-size: 12em;
-                                            color: #55518a"></h1>
+                                    <form class="form-group form center-block" method="get">
                                         <h2 style="margin-top: 0;
-                                            color: #55518a">Cooming Soon</h2>
-                                        <h3 style="margin-top: 0;
-                                            color: #55518a">Train Reservation</h3>
-                                    </center>
+                                            color: #3B5998">Twitter user</h2>
+                                        <h4 style="margin-top: 0;
+                                            color: #3B5998">User statistics, top hashtags and more</h4>
+                                        <input id="twitter-user-text" type="text" class="form-control input" name="content" autofocus="" placeholder="Enter twitter username">
+                                        <input type="radio" name="type" id="inlineRadio1" class="hidden" value="twitterUsername" checked>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">
+                                                Analyze user profile</button>
+                                            <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>
+                                        </div>
+                                    </form>
                                 </div>
 
                                     <!-- hotel search -->
                                 <div class="bhoechie-tab-content">
                                     <center>
-                                        <form class="form-group form center-block" method="get">
-                                            <input id="twitter-user-text" type="text" class="form-control input-lg" name="content" autofocus="" placeholder="Twitter username">
-                                            <input type="radio" name="type" id="inlineRadio1" value="twitterUsername2" checked>
-                                            <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">Add User2</button>
-                                        </form>
                                         <h1 class="glyphicon glyphicon-home" style="font-size: 12em;
-                                            color: #55518a"></h1>
+                                            color: #3B5998"></h1>
                                         <h2 style="margin-top: 0;
-                                            color: #55518a">Cooming Soon</h2>
+                                            color: #3B5998">Cooming Soon</h2>
                                         <h3 style="margin-top: 0;
-                                            color: #55518a">Hotel Directory</h3>
+                                            color: #3B5998">Hotel Directory</h3>
                                     </center>
                                 </div>
                                 <div class="bhoechie-tab-content">
                                     <center>
                                         <h1 class="glyphicon glyphicon-cutlery" style="font-size: 12em;
-                                            color: #55518a"></h1>
+                                            color: #3B5998"></h1>
                                         <h2 style="margin-top: 0;
-                                            color: #55518a">Cooming Soon</h2>
+                                            color: #3B5998">Cooming Soon</h2>
                                         <h3 style="margin-top: 0;
-                                            color: #55518a">Restaurant Diirectory</h3>
+                                            color: #3B5998">Restaurant Diirectory</h3>
                                     </center>
                                 </div>
                                 <div class="bhoechie-tab-content">
                                     <center>
                                         <h1 class="glyphicon glyphicon-credit-card" style="font-size: 12em;
-                                            color: #55518a"></h1>
+                                            color: #3B5998"></h1>
                                         <h2 style="margin-top: 0;
-                                            color: #55518a">Cooming Soon</h2>
+                                            color: #3B5998">Cooming Soon</h2>
                                         <h3 style="margin-top: 0;
-                                            color: #55518a">Credit Card</h3>
+                                            color: #3B5998">Credit Card</h3>
                                     </center>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div>
-                                    <button type="submit" class="btn btn-primary btn-sm" aria-hidden="true">Add User</button>
-                                    @*<button type="submit" class="btn btn-primary btn-sm" data-dismiss="modal" aria-hidden="true">Analyse profile</button>*@
-                                    <ul class="pull-left list-inline"><li><a href=""><i class="glyphicon glyphicon-upload"></i></a></li><li><a href=""><i class="glyphicon glyphicon-camera"></i></a></li><li><a href=""><i class="glyphicon glyphicon-map-marker"></i></a></li></ul>
-                                </div>
+                                @*<div class="bhoechie-tab-content">*@
+                                    @*<center>*@
+                                        @*<h1 class="glyphicon glyphicon-film" style="font-size: 12em;*@
+                                            @*color: #3B5998"></h1>*@
+                                        @*<h2 style="margin-top: 0;*@
+                                            @*color: #3B5998">Cooming Soon</h2>*@
+                                        @*<h3 style="margin-top: 0;*@
+                                            @*color: #3B5998">Films</h3>*@
+                                    @*</center>*@
+                                @*</div>*@
                             </div>
                         </div>
                     </div>
